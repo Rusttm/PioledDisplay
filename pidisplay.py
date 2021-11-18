@@ -47,11 +47,11 @@ disp = st7789.ST7789(spi, height=240, y_offset=80, rotation=180,  # 1.3", 1.54" 
 # disp = ili9341.ILI9341(
 #     spi,
 #     rotation=90,  # 2.2", 2.4", 2.8", 3.2" ILI9341
-#     cs=cs_pin,
-#     dc=dc_pin,
-#     rst=reset_pin,
-#     baudrate=BAUDRATE,
-# )
+    cs=cs_pin,
+    dc=dc_pin,
+    rst=reset_pin,
+    baudrate=BAUDRATE,
+)
 # pylint: enable=line-too-long
 
 # Create blank image for drawing.
