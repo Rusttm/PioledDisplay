@@ -19,3 +19,4 @@ rpi_ws281x==5.0.0
 smbus==1.1.post2
 sysv_ipc==1.1.0
 typing_extensions==4.10.0
+opencv-python==4.10.0.84
