@@ -94,12 +94,18 @@ x = 0
 # same directory as the python script!
 # Some other nice fonts to try: http://www.dafont.com/bitmap.php
 font = ImageFont.truetype("/home/rusttm/Desktop/PioledDisplay/ttf/DejaVuSans.ttf", 24)
-font2 = ImageFont.truetype("/home/rusttm/Desktop/PioledDisplay/ttf/DejaVuSans.ttf", 56)
+font2 = ImageFont.truetype("/home/rusttm/Desktop/PioledDisplay/ttf/DejaVuSans.ttf", 81)
 
 # Turn on the backlight
 backlight = digitalio.DigitalInOut(board.D22)
 backlight.switch_to_output()
 backlight.value = True
+buttonA = digitalio.DigitalInOut(board.D23)
+buttonB = digitalio.DigitalInOut(board.D24)
+buttonA.switch_to_input()
+buttonB.switch_to_input()
+buttonAState = True
+buttonBState = False
 
 while True:
 #battery section starts
@@ -128,25 +134,41 @@ while True:
     cmd = "cat /sys/class/thermal/thermal_zone0/temp |  awk '{printf \"Battery: %.1f C\", $(NF-0) / 1000}'"  # pylint: disable=line-too-long
     Batt = 'Batt: ' + str(battery_cap) + '% ' + str(battery_vol) + 'V'
     Date = 'Today is: ' + str(strftime("%d/%m/%y"))
-    Time = '  '+str(strftime("%H:%M"))
+    Time = ''+str(strftime("%H:%M"))
     # Write four lines of text.
     y = top
     draw.text((x, y), IP, font=font, fill="#cb997e")
-    y += font.getsize(IP)[1]
+    # y += font.getsize(IP)[1] #deprecated
+    bbox = font.getbbox(IP)
+    y += bbox[3] - bbox[1] + 1
     draw.text((x, y), CPU2, font=font, fill="#FFFF00")
-    y += font.getsize(CPU)[1]
+    bbox = font.getbbox(CPU2)
+    y += bbox[3] - bbox[1] + 1
     draw.text((x, y), MemUsage, font=font, fill="#00FF00")
-    y += font.getsize(MemUsage)[1]
+    bbox = font.getbbox(MemUsage)
+    y += bbox[3] - bbox[1] + 1
     draw.text((x, y), Disk, font=font, fill="#0000FF")
-    y += font.getsize(Disk)[1]
+    bbox = font.getbbox(Disk)
+    y += bbox[3] - bbox[1] + 1
     draw.text((x, y), Temp, font=font, fill="#FF00FF")
-    y += font.getsize(Disk)[1]
+    bbox = font.getbbox(Temp)
+    y += bbox[3] - bbox[1] + 1
     draw.text((x, y), Batt, font=font, fill="#E76F51")
-    y += font.getsize(Disk)[1]
+    bbox = font.getbbox(Batt)
+    y += bbox[3] - bbox[1] + 1
     draw.text((x, y), Date, font=font, fill="#cb997e")
-    y += font.getsize(Time)[1]
+    bbox = font.getbbox(Date)
+    y += bbox[3] - bbox[1] + 1
     draw.text((x, y), Time, font=font2, fill="#FFFFFF")
 
     # Display image.
     disp.image(image, rotation)
+    if not buttonA.value:
+        if buttonAState:
+            backlight.value = False  # turn off backlight
+            buttonAState = False
+        else:
+            backlight.value = True # turn on backligh
+            buttonAState = True
+    
     time.sleep(1)
