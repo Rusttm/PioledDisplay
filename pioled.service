@@ -1,0 +1,11 @@
+[Unit]
+Description=Pioled 2.4 service
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/home/rusttm/Desktop/PioledDisplay/.venv/bin/python /home/rusttm/Desktop/PioledDisplay/rpi4_display.py
+
+[Install]
+WantedBy=multi-user.target
